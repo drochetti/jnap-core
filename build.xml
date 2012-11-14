@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+	name="jnap" default="update-eclipse-project" basedir=".">
+
+
+	<!--
+	<property environment="env" />
+	<path id="maven-ant-tasks.classpath" path="${env.M2_HOME}/lib/maven-ant-tasks-2.1.1.jar" />
+	<typedef
+		resource="org/apache/maven/artifact/ant/antlib.xml"
+		uri="antlib:org.apache.maven.artifact.ant"
+		classpathref="maven-ant-tasks.classpath" />
+	-->
+
+	<target name="update-eclipse-project">
+		<exec executable="mvn" vmlauncher="false">
+			<arg line="eclipse:eclipse" />
+			<arg line="-DdownloadSources=true" />
+			<arg line="-DdownloadJavadocs=true" />
+		</exec>
+	</target>
+
+	<target name="maven-install">
+		<!--
+		<artifact:install >
+		</artifact:install>
+		-->
+		<exec executable="subst">
+			<arg value="m:" />
+			<arg value="." />
+		</exec>
+		<exec executable="mvn" dir="m:" vmlauncher="false">
+			<arg line="install" />
+			<arg line="-Dmaven.test.skip=true" />
+		</exec>
+		<exec executable="subst">
+			<arg value="m:" />
+			<arg value="/D" />
+		</exec>
+	</target>
+
+	<target name="maven-deploy">
+		<exec executable="mvn" dir="${java.io.tmpdir}" vmlauncher="false">
+			<arg line="source:jar" />
+			<arg line="deploy" />
+			<arg line="-Dmaven.test.skip=true" />
+			<arg line="-DperformRelease=true" />
+		</exec>
+	</target>
+
+</project>

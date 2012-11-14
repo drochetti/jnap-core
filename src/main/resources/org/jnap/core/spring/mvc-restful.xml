@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+						http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd">
+
+	<!-- i18n locale resolver -->
+	<bean id="localeResolver" class="org.jnap.core.mvc.i18n.CompositeLocaleResolver">
+		<property name="resolvers">
+			<list>
+				<bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+					<property name="cookieName" value="jnap.app.user.language" />
+					<property name="cookieMaxAge" value="1296000" />
+				</bean>
+				<bean class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+				<bean class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" />
+			</list>
+		</property>
+		<property name="defaultLocale" value="en" />
+	</bean>
+
+	<!-- Interceptors valid for all handlers -->
+	<mvc:interceptors>
+		<bean id="jnap.restful.localeChangeInterceptor"
+			class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="lang" />
+		</bean>
+		<bean id="jnap.restful.restfulMappingCacheInterceptor" class="org.jnap.core.mvc.interceptor.RestfulMappingCacheInterceptor">
+			<property name="mappingCache" ref="jnap.restful.mappingCache" />
+		</bean>
+		<bean id="jnap.restful.pagingSetupInterceptor" class="org.jnap.core.mvc.interceptor.PagingSetupInterceptor" />
+		<bean id="jnap.restful.asyncInterceptor" class="org.jnap.core.mvc.async.AsyncRequestInterceptor" />
+	</mvc:interceptors>
+
+	<!-- SpringMVC jnap custom config -->
+	<bean name="jnap.restful.mappingCache" class="org.jnap.core.mvc.support.RestfulMappingCache" />
+	<bean name="jnap.restful.handlerMapping" class="org.jnap.core.mvc.support.RestfulControllerHandlerMapping">
+		<property name="basePackage" value="#{jnapMappingProperties.basePackage}" />
+		<property name="mappingCache" ref="jnap.restful.mappingCache" />
+		<property name="order" value="1" />
+	</bean>
+	<bean name="jnap.restful.handlerAdapter" class="org.jnap.core.mvc.support.RestfulHandlerAdapter">
+		<property name="mappingCache" ref="jnap.restful.mappingCache" />
+		<property name="validatorFactory" ref="validatorFactory" />
+	</bean>
+
+	<!-- Tiles integration -->
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/tiles.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- File upload support -->
+	<bean id="jnap.restful.multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	<!-- Restful content negotiating -->
+	<bean id="jnap.restful.contentNegotiatingViewResolver_1"
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<description>
+		The ContentNegotiatingViewResolver will try to guess the resulting view based on the
+		request that was made. First it looks for the requested URI extension (e.g /book/list.json).
+		Second, if not found, for the request "accept" header.
+		The default supported media types are:
+			- json (application/json) - handled by Jackson library;
+			- xml (application/xml) - handled by XStream library;
+			- pdf;
+		</description>
+		<property name="order" value="1" />
+		<property name="ignoreAcceptHeader" value="true" />
+		<property name="mediaTypes">
+			<map>
+				<entry key="json" value="application/json" />
+				<entry key="xml" value="application/xml" />
+			</map>
+		</property>
+		<property name="viewResolvers">
+			<list>
+				<!--
+				<bean class="org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver">
+					<property name="viewClass" value="org.springframework.web.servlet.view.jasperreports.ConfigurableJasperReportsView" />
+				</bean>
+				-->
+			</list>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+					<property name="marshaller">
+						<bean class="org.springframework.oxm.xstream.XStreamMarshaller" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="jnap.restful.contentNegotiatingViewResolver_2" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="2" />
+	</bean>
+	<bean id="jnap.restful.contentNegotiatingViewResolver_3" class="org.jnap.core.mvc.view.RestfulConventionViewResolver">
+		<property name="order" value="4" />
+		<property name="mappingCache" ref="jnap.restful.mappingCache" />
+	</bean>
+
+</beans>

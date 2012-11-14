@@ -1,0 +1,61 @@
+h1. Project guidelines
+
+p. Here you will find general information about the project, such as how to configure the project in your IDE, how to manage tickets, where to find documentation, how to contribute and license type.
+
+*Table of contents:*
+* 1. Configuring the project
+** 1.1. About Maven
+** 1.2. Using Eclipse
+** 1.3. Other IDEs
+* 2. Issues
+** 2.1. Lighthouse service hook
+* 3. Documentation, discussions and help
+* 4. License
+* 5. Open Source! How to contribute?
+
+
+h2. 1. Configuring the project
+
+p. TODO
+
+h3. 1.1. About Maven
+
+p. TODO
+
+h3. 1.2. Using Eclipse
+
+p. TODO
+
+h3. 1.3. Other IDEs
+
+p. Due to the Maven nature of the project it's easier to use diferent IDEs without mess the project's organization. Altough you are free to use any IDE you want *you must not push any IDE specific file to the repository*. The only IDE-speficic files that are versioned are those from Eclipse, the recommended IDE for this project development.
+
+h2. 2. Issues
+
+p. Issues, features, etc (tickets in general) are not managed by the GitHub Issue tracking built-in feature (which is simple and great, by the way), for a more fine control and a specific workflow they're all located at Lighthouse: "http://brushingbits.lighthouseapp.com/projects/54712-jnap/":http://brushingbits.lighthouseapp.com/projects/54712-jnap/ 
+
+h3. 2.1. Lighthouse service hook
+
+p. The lighthouse service hook is enabled, that means that a commiter can (_and should_) update tickets from commit messages using the very simple Lighthouse API. The full details can be found at this "Lighthouse API FAQ Page":http://help.lighthouseapp.com/faqs/ticket-workflow/ticket-keyword-updates.
+
+p. Here are some simple examples:
+
+@Requested feature implemented [#10 milestone:next state:committed]@
+This commit message will update the ticket _#10_, adding the message to the ticket's log, moving it to the _current milestone_ and changing its state to _committed_. Pretty simple, huh? Here's another one:
+
+@Bug fixed. Now the interface must be reviewed [#51 tagged:gui responsible:rico]@
+This commit message will update the ticket _#51_, adding the message to the ticket's log, adding the tag _gui_ and modifying the responsible user to _rico_.
+
+h2. 3. Documentation, discussions and help
+
+p. TODO
+
+h2. 4. License
+
+p. This project is licensed under the *Apache License 2.0*. Summarizing, this is a license that is supposed to be compatible with other open source licenses, while remaining true to supportive and collaborative development across both nonprofit and commercial organizations.
+
+p. Read the "License":http://www.apache.org/licenses/LICENSE-2.0.txt or see the "License FAQ":http://www.apache.org/foundation/licence-FAQ.html.
+
+h2. 5. Open Source! How to contribute?
+
+p. TODO
